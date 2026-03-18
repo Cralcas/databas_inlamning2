@@ -19,6 +19,7 @@ CREATE TABLE Kunder (
 CREATE INDEX index_email ON Kunder(Email);
 
 -- Skapar tabell för beställningar
+-- Lade till ON DELETE CASCADE, för att ta bort automatiskt från fk constraint
 CREATE TABLE Bestallningar (
 	OrderID INT AUTO_INCREMENT PRIMARY KEY,
 	KundID INT NOT NULL,
@@ -38,6 +39,7 @@ CREATE TABLE Bocker (
 );
 
 -- Skapar tabell för Orderrader
+-- Lade till ON DELETE CASCADE, för att ta bort automatiskt från fk constraint
 CREATE TABLE Orderrader (
 	OrderradID INT AUTO_INCREMENT PRIMARY KEY,
 	OrderID INT NOT NULL,
@@ -48,6 +50,8 @@ CREATE TABLE Orderrader (
 	FOREIGN KEY (BokID) REFERENCES Bocker(BokID) ON DELETE CASCADE-- Foreignkey refererar till Bocker.BokID
 );
 
+-- Skapar tabell för Kundlogg
+-- Lade till ON DELETE CASCADE, för att ta bort automatiskt från fk constraint
 CREATE TABLE Kundlogg (
     LoggID INT AUTO_INCREMENT PRIMARY KEY,
     KundID INT,
@@ -56,7 +60,7 @@ CREATE TABLE Kundlogg (
     FOREIGN KEY (KundID) REFERENCES Kunder(KundID) ON DELETE SET NULL
 );
 
--- 5 Index, Constraints & Triggers
+-- Triggers för att uppdatera lager och logga kunder
 
 DELIMITER $$
 
@@ -106,22 +110,24 @@ INSERT INTO Orderrader (OrderID, BokID, Antal, Pris) VALUES
 	(3, 2, 3, 18.99),
     (4, 2, 1, 18.99);
 
--- 2. Hämta, filtrera och sortera
+-- Hämta kunder och Beställningar
 SELECT * FROM Kunder;
 SELECT * FROM Bestallningar;
 
+-- Filtrera efter kunder som heter 'Lisa Berg' och har 'lisa@mail.com'
 SELECT * FROM Kunder
 WHERE Namn = 'Lisa Berg' AND Email = 'lisa@mail.com';
 
-SELECt * FROM Bocker
+-- Sortera från böcker lågt till högt
+SELECT * FROM Bocker
 ORDER BY Pris ASC;
 
--- 3. Modifiera data (UPDATE, DELETE, TRANSAKTIONER)
--- Lade till ON DELETE CASCADE, för att ta bort automatiskt från fk constraint
+-- Uppdatera email för kund med KundID 3
 UPDATE Kunder
 SET Email = 'nyemail@mail.com'
 WHERE KundID = 3;
 
+-- Ta bort kund och sen ångra med rollback
 START TRANSACTION;
 
 DELETE FROM Kunder
@@ -133,8 +139,7 @@ ROLLBACK;
 
 SELECT * FROM Kunder;
 
--- Arbeta med JOINs & GROUP BY
--- punkt 1, 3, 4
+-- 
 SELECT Kunder.KundID, Kunder.Namn, COUNT(Bestallningar.OrderID) AS AntalBestallningar
 FROM Kunder
 INNER JOIN Bestallningar ON Kunder.KundID = Bestallningar.KundID
@@ -142,7 +147,8 @@ GROUP BY Kunder.KundID, Kunder.Namn
 HAVING AntalBestallningar > 2
 ORDER BY AntalBestallningar DESC;
 
--- punkt 2
+-- Hämtar alla kunder och deras eventuella ordrar (inklusive kunder utan order), 
+-- Sortera med de senaste beställningarna först
 SELECT Kunder.Namn, Bestallningar.OrderID
 FROM Kunder
 LEFT JOIN Bestallningar
