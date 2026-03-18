@@ -45,7 +45,7 @@ CREATE TABLE Orderrader (
     Antal INT NOT NULL CHECK (Antal > 0),
 	Pris DECIMAL(10,2) NOT NULL CHECK (Pris > 0),
 	FOREIGN KEY (OrderID) REFERENCES Bestallningar(OrderID) ON DELETE CASCADE, -- Foreignkey refererar till Order.OrderID
-	FOREIGN KEY (BokID) REFERENCES Bocker(BokID) ON DELETE CASCADE,-- Foreignkey refererar till Bocker.BokID
+	FOREIGN KEY (BokID) REFERENCES Bocker(BokID) ON DELETE CASCADE-- Foreignkey refererar till Bocker.BokID
 );
 
 CREATE TABLE Kundlogg (
