@@ -139,13 +139,18 @@ ROLLBACK;
 
 SELECT * FROM Kunder;
 
--- 
+-- Hämta vilka kunder som har lagt beställningar och räkna antalet per kund
 SELECT Kunder.KundID, Kunder.Namn, COUNT(Bestallningar.OrderID) AS AntalBestallningar
 FROM Kunder
 INNER JOIN Bestallningar ON Kunder.KundID = Bestallningar.KundID
+GROUP BY Kunder.KundID, Kunder.Namn;
+
+-- Hämta kunder och räkna antal beställningar, visa endast kunder med fler än 2 beställningar
+SELECT Kunder.Namn, COUNT(Bestallningar.OrderID) AS AntalBestallningar
+FROM Kunder
+INNER JOIN Bestallningar ON Kunder.KundID = Bestallningar.KundID
 GROUP BY Kunder.KundID, Kunder.Namn
-HAVING AntalBestallningar > 2
-ORDER BY AntalBestallningar DESC;
+HAVING COUNT(Bestallningar.OrderID) > 2;
 
 -- Hämtar alla kunder och deras eventuella ordrar (inklusive kunder utan order), 
 -- Sortera med de senaste beställningarna först
