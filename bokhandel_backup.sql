@@ -21,7 +21,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
--- SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'c863c45b-bf9c-11f0-a1e5-005056c00001:1-244';
+-- SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'c863c45b-bf9c-11f0-a1e5-005056c00001:1-269';
 
 --
 -- Table structure for table `bestallningar`
@@ -48,7 +48,7 @@ CREATE TABLE `bestallningar` (
 
 LOCK TABLES `bestallningar` WRITE;
 /*!40000 ALTER TABLE `bestallningar` DISABLE KEYS */;
-INSERT INTO `bestallningar` VALUES (1,1,'2026-03-11 19:39:35',39.98),(2,2,'2026-03-11 19:39:35',17.99),(3,4,'2026-03-11 19:39:35',56.97),(4,1,'2026-03-11 19:39:35',18.99);
+INSERT INTO `bestallningar` VALUES (1,1,'2026-03-18 10:02:44',39.98),(2,2,'2026-03-18 10:02:44',17.99),(3,4,'2026-03-18 10:02:44',56.97),(4,1,'2026-03-18 10:02:44',18.99);
 /*!40000 ALTER TABLE `bestallningar` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -108,7 +108,7 @@ CREATE TABLE `kunder` (
 
 LOCK TABLES `kunder` WRITE;
 /*!40000 ALTER TABLE `kunder` DISABLE KEYS */;
-INSERT INTO `kunder` VALUES (1,'Anna Andersson','anna@mail.com','1234567890','Adress1'),(2,'Erik Svensson','erik@mail.com','1224567890','Adress2'),(3,'Lisa Berg','lisa@mail.com','1034567800','Adress33'),(4,'Clas Ohlson','cl@mail.com','5554567800','Adress4');
+INSERT INTO `kunder` VALUES (1,'Anna Andersson','anna@mail.com','1234567890','Adress1'),(2,'Erik Svensson','erik@mail.com','1224567890','Adress2'),(3,'Lisa Berg','nyemail@mail.com','1034567800','Adress3'),(4,'Clas Ohlson','cl@mail.com','5554567800','Adress4');
 /*!40000 ALTER TABLE `kunder` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -141,7 +141,7 @@ CREATE TABLE `kundlogg` (
   `LoggID` int NOT NULL AUTO_INCREMENT,
   `KundID` int DEFAULT NULL,
   `Handelse` varchar(255) DEFAULT NULL,
-  `LoggDatum` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `Loggdatum` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`LoggID`),
   KEY `KundID` (`KundID`),
   CONSTRAINT `kundlogg_ibfk_1` FOREIGN KEY (`KundID`) REFERENCES `kunder` (`KundID`) ON DELETE SET NULL
@@ -154,7 +154,7 @@ CREATE TABLE `kundlogg` (
 
 LOCK TABLES `kundlogg` WRITE;
 /*!40000 ALTER TABLE `kundlogg` DISABLE KEYS */;
-INSERT INTO `kundlogg` VALUES (1,1,'Ny kund: Anna Andersson','2026-03-11 19:39:35'),(2,2,'Ny kund: Erik Svensson','2026-03-11 19:39:35'),(3,3,'Ny kund: Lisa Berg','2026-03-11 19:39:35'),(4,4,'Ny kund: Clas Ohlson','2026-03-11 19:39:35');
+INSERT INTO `kundlogg` VALUES (1,1,'Ny kund: Anna Andersson','2026-03-18 10:02:44'),(2,2,'Ny kund: Erik Svensson','2026-03-18 10:02:44'),(3,3,'Ny kund: Lisa Berg','2026-03-18 10:02:44'),(4,4,'Ny kund: Clas Ohlson','2026-03-18 10:02:44');
 /*!40000 ALTER TABLE `kundlogg` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -175,7 +175,7 @@ CREATE TABLE `orderrader` (
   KEY `OrderID` (`OrderID`),
   KEY `BokID` (`BokID`),
   CONSTRAINT `orderrader_ibfk_1` FOREIGN KEY (`OrderID`) REFERENCES `bestallningar` (`OrderID`) ON DELETE CASCADE,
-  CONSTRAINT `orderrader_ibfk_2` FOREIGN KEY (`BokID`) REFERENCES `bocker` (`BokID`),
+  CONSTRAINT `orderrader_ibfk_2` FOREIGN KEY (`BokID`) REFERENCES `bocker` (`BokID`) ON DELETE CASCADE,
   CONSTRAINT `orderrader_chk_1` CHECK ((`Antal` > 0)),
   CONSTRAINT `orderrader_chk_2` CHECK ((`Pris` > 0))
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -224,4 +224,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-11 20:43:45
+-- Dump completed on 2026-03-18 11:05:16
