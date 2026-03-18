@@ -119,7 +119,7 @@ ORDER BY Pris ASC;
 -- 3. Modifiera data (UPDATE, DELETE, TRANSAKTIONER)
 -- Lade till ON DELETE CASCADE, för att ta bort automatiskt från fk constraint
 UPDATE Kunder
-SET Adress = 'Adress33'
+SET Email = 'nyemail@mail.com'
 WHERE KundID = 3;
 
 START TRANSACTION;
@@ -139,7 +139,7 @@ SELECT Kunder.KundID, Kunder.Namn, COUNT(Bestallningar.OrderID) AS AntalBestalln
 FROM Kunder
 INNER JOIN Bestallningar ON Kunder.KundID = Bestallningar.KundID
 GROUP BY Kunder.KundID, Kunder.Namn
-HAVING AntalBestallningar >= 1
+HAVING AntalBestallningar > 2
 ORDER BY AntalBestallningar DESC;
 
 -- punkt 2
